@@ -101,3 +101,10 @@ def who_place_first(p1card,p2card,tiebreaker):
             return [p1card,p2card]
         else:
             return [p2card,p1card]
+        
+#기보제작?
+def get_notation(p1card,p2card,game_notation):
+    now_turn_note = []
+    pass
+
+    

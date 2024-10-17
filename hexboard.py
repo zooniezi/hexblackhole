@@ -57,7 +57,7 @@ player_white_hand = ai_player.start_hand(3,white_cards)
 
 #임시 테스트용 변수
 temp = 1
-
+game_notation = [tiebreaker]
 #게임 진행
 while True:
     #한칸만 비어있는 경우 점수 계산 및 게임 종료
@@ -66,7 +66,6 @@ while True:
         black_score = decision.check_score(board,adjacent,1)
         white_score = decision.check_score(board,adjacent,2)
         winning_call = ""
-
 
         if black_score>white_score:
             winning_call = "Black wins"
@@ -82,34 +81,18 @@ while True:
         print(f'Total Score\nBlack : {black_score}\nWhite : {white_score}\n{winning_call}')
         break
     
-    #임시용 코드 (순서대로 뽑아 순서대로 배치)
+    #임시용 코드 (무작위로 뽑아 무작위로 배치)
     now_black = ai_player.choose_card(player_black_hand)
-    ai_player.draw_card(player_black_hand,black_cards)
+    ai_player.draw_card(now_black,player_black_hand,black_cards)
 
     now_white = ai_player.choose_card(player_white_hand)
-    ai_player.draw_card(player_white_hand,white_cards)
+    ai_player.draw_card(now_white,player_white_hand,white_cards)
 
     board[ai_player.choose_place(board)] = decision.who_place_first(now_black,now_white,tiebreaker)[0]
     board[ai_player.choose_place(board)] = decision.who_place_first(now_black,now_white,tiebreaker)[1]
-    temp+=2
     
-
+    temp+=2
     print(f'Now turn : {temp//2+1}\n\n')
-    # if now_black[0] <= now_white[0]:
-    #     board[temp][0] = now_black[0]
-    #     board[temp][1] = 1
-    #     temp += 1
-    #     board[temp][0] = now_white[0]
-    #     board[temp][1] = 2
-    #     temp += 1
-    # else:
-    #     board[temp][0] = now_white[0]
-    #     board[temp][1] = 2
-    #     temp += 1
-    #     board[temp][0] = now_black[0]
-    #     board[temp][1] = 1
-    #     temp += 1
-
     decision.print_board(board)
     print()
     print('Current Score')

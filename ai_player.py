@@ -2,7 +2,6 @@ import random
 
 def choose_card(hand):
     choice = random.choice(hand)
-    hand.remove(choice)
 
     return choice
 
@@ -17,7 +16,8 @@ def choose_place(board):
     random_place_choice = random.choice(available_place)
     return random_place_choice
 
-def draw_card(hand,deck):
+def draw_card(choice,hand,deck):
+    hand.remove(choice)
     #덱이 비어있으면 안뽑음
     if not deck:
         return
