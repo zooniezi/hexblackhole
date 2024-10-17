@@ -61,7 +61,7 @@ def blackhole_swallow(board,adjacent):
             break
     # 블랙홀 주위는 빈칸으로 만들기
     for adjacent_with_blackhole in adjacent[blackhole]:
-        board[adjacent_with_blackhole] = [-1,0]
+        board[adjacent_with_blackhole] = [0,0]
 
 def check_score(board,adjacent,player_num):
     score = 0
@@ -87,3 +87,17 @@ def check_score(board,adjacent,player_num):
             else:
                 score+=length_of_cluster
     return score
+
+
+def who_place_first(p1card,p2card,tiebreaker):
+    if p1card[0] < p2card[0]:
+        return [p1card,p2card]
+    
+    if p1card[0] > p2card[0]:
+        return [p2card,p1card]
+    
+    if p1card[0] == p2card[0]:
+        if p1card[1] == tiebreaker:
+            return [p1card,p2card]
+        else:
+            return [p2card,p1card]

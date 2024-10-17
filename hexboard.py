@@ -1,5 +1,5 @@
 from random import shuffle
-import decision
+import decision, ai_player
 
 #보드판 위의 숫자가 무엇인지 (기본:-1), 무슨 색인지 (빈칸:0 흑:1 백:2)
 board = [[-1,0] for i in range(20)]
@@ -28,26 +28,37 @@ adjacent = [
     [15,16,18],
 ]
 
+#같은 숫자를 낸 경우 우선권 선언(기본:1-흑색 우선)
+tiebreaker = 1
+
+#점수 계산에 쓰일 변수 선언
+black_score = 0
+white_score = 0
+
 # 각 플레이어 전체 카드풀 만들기 및 1카드는 서로 반대 색으로 설정하기
 black_cards = [[i,1] for i in range(1,12)]
 white_cards = [[i,2] for i in range(1,12)]
 black_cards[0][1] = 2
 white_cards[0][1] = 1
 
-# 카드 섞기
+# 카드 덱 섞기
 shuffle(black_cards)
 shuffle(white_cards)
 
-
-black_score = 0
-white_score = 0
-
+# 초기 세팅 확인용
 decision.print_board(board)
 print(black_cards)
 print(white_cards)
 
-#임시 테스트용
+#게임 시작 전 초기 손패 뽑기
+player_black_hand = ai_player.start_hand(3,black_cards)
+player_white_hand = ai_player.start_hand(3,white_cards)
+
+
+#임시 테스트용 변수
 temp = 1
+
+#게임 진행
 while True:
     #한칸만 비어있는 경우 점수 계산 및 게임 종료
     if decision.game_over(board):
@@ -71,25 +82,33 @@ while True:
         print(f'Total Score\nBlack : {black_score}\nWhite : {white_score}\n{winning_call}')
         break
     
-    #임시용 코드
-    now_black = black_cards.pop()
-    now_white = white_cards.pop()
+    #임시용 코드 (순서대로 뽑아 순서대로 배치)
+    now_black = ai_player.choose_card(player_black_hand)
+    ai_player.draw_card(player_black_hand,black_cards)
+
+    now_white = ai_player.choose_card(player_white_hand)
+    ai_player.draw_card(player_white_hand,white_cards)
+
+    board[ai_player.choose_place(board)] = decision.who_place_first(now_black,now_white,tiebreaker)[0]
+    board[ai_player.choose_place(board)] = decision.who_place_first(now_black,now_white,tiebreaker)[1]
+    temp+=2
+    
 
     print(f'Now turn : {temp//2+1}\n\n')
-    if now_black[0] <= now_white[0]:
-        board[temp][0] = now_black[0]
-        board[temp][1] = 1
-        temp += 1
-        board[temp][0] = now_white[0]
-        board[temp][1] = 2
-        temp += 1
-    else:
-        board[temp][0] = now_white[0]
-        board[temp][1] = 2
-        temp += 1
-        board[temp][0] = now_black[0]
-        board[temp][1] = 1
-        temp += 1
+    # if now_black[0] <= now_white[0]:
+    #     board[temp][0] = now_black[0]
+    #     board[temp][1] = 1
+    #     temp += 1
+    #     board[temp][0] = now_white[0]
+    #     board[temp][1] = 2
+    #     temp += 1
+    # else:
+    #     board[temp][0] = now_white[0]
+    #     board[temp][1] = 2
+    #     temp += 1
+    #     board[temp][0] = now_black[0]
+    #     board[temp][1] = 1
+    #     temp += 1
 
     decision.print_board(board)
     print()
