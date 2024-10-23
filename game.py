@@ -7,6 +7,8 @@ class Game:
         self.player1 = player1
         self.player2 = player2
         self.verbose = verbose
+        # 기보관리
+        # self.notation = [[[],[]] for i in range(10)]
         self.turn = 0
         self.player1_score = 0
         self.player2_score = 0
