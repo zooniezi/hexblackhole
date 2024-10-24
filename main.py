@@ -6,7 +6,7 @@ print("Enter 1 if you want to play, otherwise it will be an AI match.")
 a = input()
 if a == '1':
     player1 = HumanPlayer()
-    player2 = RandomPlayer()
+    player2 = HumanPlayer()
 else:
     player1 = RandomPlayer()
     player2 = RandomPlayer()
