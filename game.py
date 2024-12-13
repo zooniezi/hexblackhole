@@ -12,7 +12,7 @@ class Game:
         self.turn = 0
         self.player1_score = 0
         self.player2_score = 0
-        self.board = [[-1, 0] for i in range(20)]
+        self.board = [[i, 0] for i in range(20)]
         self.adjacent = [
             [],
             [2, 4, 5],
@@ -198,9 +198,11 @@ class Game:
             self.black_score = self.check_score(1)
             self.white_score = self.check_score(2)
             if self.black_score > self.white_score:
-                winning_call = "Black wins"
+                # black player's color printed in red color
+                winning_call = "Red wins"
             elif self.black_score < self.white_score:
-                winning_call = "White wins"
+                # white player's color printed in blue color
+                winning_call = "Blue wins"
             else:
                 winning_call = "Draw"
             if self.verbose:
@@ -208,7 +210,7 @@ class Game:
                 self.print_board()
                 print()
                 print(
-                    f"Total Score\nBlack : {self.black_score}\nWhite : {self.white_score}\n{winning_call}"
+                    f"Total Score\nRed : {self.black_score}\nBlue : {self.white_score}\n{winning_call}"
                 )
             return False
 
@@ -225,11 +227,23 @@ class Game:
 
         # 카드 착수
         order = self.who_place_first(now_black, now_white)
+
+        if self.verbose:
+            print(f"Now turn : {self.turn}")
+            print('check!!!!!!!!!!!!!!')
+            self.print_board()
+            print("\n\n")
+
         if order == 1:
             location = self.player1.choose_location_first(
                 self.board, now_black, now_white
             )
             self.board[location] = now_black
+            
+            if self.verbose:
+                print("check2222222222222222222222222222222222")
+                self.print_board()
+                print("\n\n")
             location = self.player2.choose_location_second(self.board, now_white)
             self.board[location] = now_white
         else:
@@ -237,7 +251,10 @@ class Game:
                 self.board, now_white, now_black
             )
             self.board[location] = now_white
-            location = self.player2.choose_location_second(self.board, now_black)
+            if self.verbose:
+                self.print_board()
+                print("\n\n")
+            location = self.player1.choose_location_second(self.board, now_black)
             self.board[location] = now_black
 
         self.turn += 1
@@ -245,8 +262,8 @@ class Game:
             print(f"Now turn : {self.turn}")
             self.print_board()
             print("Current Score")
-            print("Black", self.check_score(1))
-            print("White", self.check_score(2))
+            print("Red", self.check_score(1))
+            print("Blue", self.check_score(2))
             print("\n\n")
 
         return True
