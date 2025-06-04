@@ -11,6 +11,7 @@
 ## Game Progress (2 players)
 - Each player secretly places one tile face down.
 - Both players reveal their tiles simultaneously, and the player with the lower number places their tile on the game board first. (If the numbers are the same, the player with a tile of the same color as the first player marker places the tile first.)
+- If player put down a 6, when player place a tile, player can move any 1 tile of the same color adjacent to the 6 to any empty space adjacent to the 6 which just placed.
 - Repeat the above steps until there is no space left on the board.
 ## Game End
 The game ends when there is only one empty space left on the game board.
