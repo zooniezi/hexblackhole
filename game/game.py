@@ -192,6 +192,26 @@ class Game:
             else:
                 return 2
 
+    #숫자 6 능력 발동 관련 처리 함수
+    def try_special_move(self, placed_location, color, player):
+        movable = self.get_adjacent_same_color_tiles(placed_location, color)  # 6번 타일 기준 같은 색 타일들
+        destinations = self.get_adjacent_empty_positions(placed_location)    # 6번 타일 기준 빈칸만!
+
+        if self.verbose:
+            print(f"[능력체크] 6번 타일 착수 위치: {placed_location}")
+            print(f"[능력체크] 이동 가능한 같은 색 타일: {movable}")
+            print(f"[능력체크] 이동 가능한 목적지 후보 (6번 타일 주변): {destinations}")
+        
+        self.print_board()
+
+        if movable and destinations:
+            move = player.choose_relocation(self.board, movable, destinations, placed_location)
+            if move:
+                from_pos, to_pos = move
+                self.board[to_pos] = self.board[from_pos]
+                self.board[from_pos] = [from_pos, 0]
+                self.print_board()
+
     def process_turn(self):
         if self.game_over():
             self.blackhole_swallow()
@@ -235,27 +255,29 @@ class Game:
             print("\n\n")
 
         if order == 1:
-            location = self.player1.choose_location_first(
-                self.board, now_black, now_white
-            )
-            self.board[location] = now_black
-            
-            if self.verbose:
-                print("check2222222222222222222222222222222222")
-                self.print_board()
-                print("\n\n")
-            location = self.player2.choose_location_second(self.board, now_white)
-            self.board[location] = now_white
+            black_location = self.player1.choose_location_first(self.board, now_black, now_white)
+            self.board[black_location] = now_black
+
+            if now_black[0] == 6:
+                self.try_special_move(black_location, 1, self.player1)
+
+            white_location = self.player2.choose_location_second(self.board, now_white)
+            self.board[white_location] = now_white
+
+            if now_white[0] == 6:
+                self.try_special_move(white_location, 2, self.player2)
         else:
-            location = self.player2.choose_location_first(
-                self.board, now_white, now_black
-            )
-            self.board[location] = now_white
-            if self.verbose:
-                self.print_board()
-                print("\n\n")
-            location = self.player1.choose_location_second(self.board, now_black)
-            self.board[location] = now_black
+            white_location = self.player2.choose_location_first(self.board, now_white, now_black)
+            self.board[white_location] = now_white
+
+            if now_white[0] == 6:
+                self.try_special_move(white_location, 2, self.player2)
+
+            black_location = self.player1.choose_location_second(self.board, now_black)
+            self.board[black_location] = now_black
+
+            if now_black[0] == 6:
+                self.try_special_move(black_location, 1, self.player1)
 
         self.turn += 1
         if self.verbose:
@@ -278,3 +300,19 @@ class Game:
             return 2
         else:
             return 3 - self.tiebreaker
+
+    def get_adjacent_same_color_tiles(self, position, color):
+        """입력 위치에서 인접한 같은 색의 타일 위치 목록을 반환"""
+        return [
+            adj
+            for adj in self.adjacent[position]
+            if self.board[adj][1] == color
+        ]
+
+    def get_adjacent_empty_positions(self, position):
+        """입력 위치에서 인접한 빈칸 위치 목록을 반환"""
+        return [
+            adj
+            for adj in self.adjacent[position]
+            if self.board[adj][1] == 0
+        ]
